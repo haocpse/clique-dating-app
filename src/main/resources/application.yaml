@@ -15,5 +15,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  server:
-    port: 8080
+server:
+  port: 8080
+
+jwt:
+  signerKey: GbcZunUaQZdWvCTcyMTgZoMoWhwxucO38cFN9wB4CE2U+oXolHhrtWZcJ4LeLbQr
