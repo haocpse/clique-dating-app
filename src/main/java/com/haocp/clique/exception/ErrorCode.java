@@ -13,7 +13,11 @@ public enum ErrorCode {
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Unauthenticated"),
     UNAUTHORIZED(HttpStatus.FORBIDDEN, "Unauthorized"),
     NOT_FOUND(HttpStatus.NOT_FOUND, "Resource not found"),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error"),
+    EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "Email already exists"),
+    PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "Password and confirm password do not match"),
+    INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Invalid email or password"),
+    USER_DISABLED(HttpStatus.FORBIDDEN, "Account has been disabled");
 
     String message;
     HttpStatusCode statusCode;

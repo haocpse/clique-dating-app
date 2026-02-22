@@ -44,6 +44,10 @@ public class User {
     @Column(name = "provider_id")
     private String providerId;
 
+    @Column(nullable = false, length = 20)
+    @Builder.Default
+    private String role = "USER";
+
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 

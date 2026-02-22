@@ -1,13 +1,13 @@
 spring:
   application:
     name: clique
-
   datasource:
     url: jdbc:mysql://localhost:3306/clique_dating
     username: root
     password: 12345
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+  flyway:
+    baseline-on-migrate: true
   jpa:
     hibernate:
       ddl-auto: none

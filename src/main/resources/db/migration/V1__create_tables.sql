@@ -13,6 +13,7 @@ CREATE TABLE users (
     email_verified  BOOLEAN         NOT NULL DEFAULT FALSE,
     auth_provider   VARCHAR(20)     DEFAULT 'LOCAL',
     provider_id     VARCHAR(255)    NULL,
+    role            VARCHAR(20)     NOT NULL DEFAULT 'USER',
     last_login      DATETIME        NULL,
     created_at      DATETIME        NOT NULL,
     updated_at      DATETIME        NULL,
