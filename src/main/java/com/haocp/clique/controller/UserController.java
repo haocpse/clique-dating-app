@@ -1,8 +1,10 @@
 package com.haocp.clique.controller;
 
 import com.haocp.clique.dto.ApiResponse;
+import com.haocp.clique.dto.request.user.AddUserAvailabilityRequest;
 import com.haocp.clique.dto.request.user.CreateUserProfileRequest;
 import com.haocp.clique.dto.request.user.UpdateUserProfileRequest;
+import com.haocp.clique.dto.response.user.UserAvailabilityResponse;
 import com.haocp.clique.dto.response.user.UserPhotoResponse;
 import com.haocp.clique.dto.response.user.UserResponse;
 import com.haocp.clique.service.UserPhotoService;
@@ -92,6 +94,16 @@ public class UserController {
                 .code(200)
                 .message("Get user by id successfully")
                 .data(userService.getUserById(id))
+                .build();
+    }
+
+    @PostMapping("/availability")
+    public ApiResponse<UserAvailabilityResponse> addAvailability(@RequestBody AddUserAvailabilityRequest request){
+        Long userId = JwtTokenProvider.getCurrentUserId();
+        return ApiResponse.<UserAvailabilityResponse>builder()
+                .code(200)
+                .data(userService.addAvailability(userId, request))
+                .message("Add availability successfully")
                 .build();
     }
 

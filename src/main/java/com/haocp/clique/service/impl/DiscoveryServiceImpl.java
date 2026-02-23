@@ -1,11 +1,16 @@
 package com.haocp.clique.service.impl;
 
+import com.haocp.clique.dto.request.match.AddDateScheduleRequest;
+import com.haocp.clique.dto.request.match.UpdateDateScheduleRequest;
+import com.haocp.clique.dto.response.match.DateScheduleResponse;
 import com.haocp.clique.dto.response.match.MatchResponse;
 import com.haocp.clique.entity.*;
+import com.haocp.clique.entity.enums.DateScheduleStatus;
 import com.haocp.clique.entity.enums.LikeType;
 import com.haocp.clique.entity.enums.MatchStatus;
 import com.haocp.clique.exception.AppException;
 import com.haocp.clique.exception.ErrorCode;
+import com.haocp.clique.mapper.DateScheduleMapper;
 import com.haocp.clique.repository.DateScheduleRepository;
 import com.haocp.clique.repository.LikeRepository;
 import com.haocp.clique.repository.MatchRepository;
@@ -31,6 +36,7 @@ public class DiscoveryServiceImpl implements DiscoveryService {
     LikeRepository likeRepository;
     MatchRepository matchRepository;
     DateScheduleRepository dateScheduleRepository;
+    DateScheduleMapper dateScheduleMapper;
 
     @Override
     public Boolean action(Long likerId, Long likedId, LikeType likeType) {
@@ -42,7 +48,7 @@ public class DiscoveryServiceImpl implements DiscoveryService {
                 .liker(liker)
                 .liked(liked)
                 .build();
-        switch (likeType){
+        switch (likeType) {
             case LIKE:
                 like.setLikeType(LikeType.LIKE);
                 break;
@@ -51,7 +57,7 @@ public class DiscoveryServiceImpl implements DiscoveryService {
         }
         likeRepository.save(like);
         boolean isMatch = likeRepository.existsByLiker_IdAndLiked_Id(likedId, likerId);
-        if (isMatch){
+        if (isMatch) {
             match(liker, liked);
         }
         return isMatch;
@@ -62,7 +68,29 @@ public class DiscoveryServiceImpl implements DiscoveryService {
         return null;
     }
 
-    void match(User liker, User liked){
+    @Override
+    public DateScheduleResponse addDateSchedule(Long matchId, Long userId, AddDateScheduleRequest request) {
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new AppException(ErrorCode.MATCH_NOT_FOUND));
+        User requester = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        DateSchedule dateSchedule = dateScheduleMapper.toDateSchedule(request);
+        dateSchedule.setMatch(match);
+        dateSchedule.setStatus(DateScheduleStatus.PENDING);
+        dateSchedule.setRequester(requester);
+        dateSchedule.setReceiver(dateSchedule.getMatch().getUser1().getId().equals(requester.getId())
+                ? dateSchedule.getMatch().getUser2()
+                : dateSchedule.getMatch().getUser1());
+        dateScheduleRepository.save(dateSchedule);
+        return dateScheduleMapper.toDateScheduleResponse(dateSchedule);
+    }
+
+    @Override
+    public DateScheduleResponse updateDateSchedule(Long matchId, Long userId, Long scheduleId, UpdateDateScheduleRequest request) {
+        return null;
+    }
+
+    void match(User liker, User liked) {
         Match match = Match.builder()
                 .user1(liked)
                 .user2(liker)
@@ -72,10 +100,10 @@ public class DiscoveryServiceImpl implements DiscoveryService {
         List<UserAvailability> user1Availabilities = liked.getAvailabilities();
         List<UserAvailability> user2Availabilities = liker.getAvailabilities();
         List<DateSchedule> schedules = new ArrayList<>();
-        for (UserAvailability user1Availability : user1Availabilities){
-            for (UserAvailability user2Availability : user2Availabilities){
+        for (UserAvailability user1Availability : user1Availabilities) {
+            for (UserAvailability user2Availability : user2Availabilities) {
                 if ((user1Availability.getIsActive() && user2Availability.getIsActive())
-                && user1Availability.getSpecificDate().equals(user2Availability.getSpecificDate())){
+                        && user1Availability.getSpecificDate().equals(user2Availability.getSpecificDate())) {
                     DateSchedule schedule = DateSchedule.builder()
                             .scheduledAt(LocalDateTime.from(user1Availability.getSpecificDate()))
                             .build();

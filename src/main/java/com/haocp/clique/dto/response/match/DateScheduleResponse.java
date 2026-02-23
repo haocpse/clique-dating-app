@@ -24,5 +24,6 @@ public class DateScheduleResponse {
     DateScheduleStatus status;
     Long cancelledById;
     String cancelReason;
+    Boolean isRequester;
 
 }

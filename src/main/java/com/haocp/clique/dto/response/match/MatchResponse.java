@@ -16,5 +16,4 @@ public class MatchResponse {
     UserResponse user;
     List<DateScheduleResponse> schedules;
 
-
 }

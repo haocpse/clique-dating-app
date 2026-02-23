@@ -2,16 +2,21 @@ package com.haocp.clique.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.haocp.clique.dto.request.user.AddUserAvailabilityRequest;
 import com.haocp.clique.dto.request.user.CreateUserProfileRequest;
 import com.haocp.clique.dto.request.user.UpdateUserProfileRequest;
+import com.haocp.clique.dto.response.user.UserAvailabilityResponse;
 import com.haocp.clique.dto.response.user.UserResponse;
 import com.haocp.clique.entity.User;
+import com.haocp.clique.entity.UserAvailability;
 import com.haocp.clique.entity.UserPhoto;
 import com.haocp.clique.entity.UserProfile;
 import com.haocp.clique.exception.AppException;
 import com.haocp.clique.exception.ErrorCode;
+import com.haocp.clique.mapper.UserAvailabilityMapper;
 import com.haocp.clique.mapper.UserMapper;
 import com.haocp.clique.mapper.UserProfileMapper;
+import com.haocp.clique.repository.UserAvailabilityRepository;
 import com.haocp.clique.repository.UserProfileRepository;
 import com.haocp.clique.repository.UserRepository;
 import com.haocp.clique.service.UserService;
@@ -39,6 +44,8 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     UserProfileMapper userProfileMapper;
     UserMapper userMapper;
+    UserAvailabilityMapper userAvailabilityMapper;
+    UserAvailabilityRepository userAvailabilityRepository;
 
     @Override
     @Transactional
@@ -114,6 +121,16 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         return userMapper.toDiscoveryResponse(user);
+    }
+
+    @Override
+    public UserAvailabilityResponse addAvailability(Long userId, AddUserAvailabilityRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        UserAvailability availability = userAvailabilityMapper.toAvailability(request);
+        availability.setUser(user);
+        userAvailabilityRepository.save(availability);
+        return userAvailabilityMapper.toUserAvailabilityResponse(availability);
     }
 
 

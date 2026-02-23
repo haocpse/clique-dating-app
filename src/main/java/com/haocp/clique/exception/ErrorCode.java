@@ -24,6 +24,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     USER_PROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "Profile not found"),
     USER_PHOTO_NOT_FOUND(HttpStatus.NOT_FOUND, "Photo not found"),
+    MATCH_NOT_FOUND(HttpStatus.NOT_FOUND, "Match not found"),
     //500
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error"),
     //Others

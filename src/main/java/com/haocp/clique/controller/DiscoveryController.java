@@ -1,6 +1,9 @@
 package com.haocp.clique.controller;
 
 import com.haocp.clique.dto.ApiResponse;
+import com.haocp.clique.dto.request.match.AddDateScheduleRequest;
+import com.haocp.clique.dto.request.match.UpdateDateScheduleRequest;
+import com.haocp.clique.dto.response.match.DateScheduleResponse;
 import com.haocp.clique.dto.response.match.MatchResponse;
 import com.haocp.clique.dto.response.user.UserResponse;
 import com.haocp.clique.entity.enums.LikeType;
@@ -22,7 +25,7 @@ public class DiscoveryController {
 
     DiscoveryService discoveryService;
 
-    @PostMapping("/user/{id}")
+    @PostMapping("/swipe/{id}")
     public ApiResponse<Boolean> action(@PathVariable Long id, @RequestParam LikeType action){
         Long currentId = JwtTokenProvider.getCurrentUserId();
         return ApiResponse.<Boolean>builder()
@@ -39,6 +42,26 @@ public class DiscoveryController {
                 .code(200)
                 .message("Get all matched successfully")
                 .data(discoveryService.getAllMatched(userId))
+                .build();
+    }
+
+    @PostMapping("/match/{id}/schedule")
+    public ApiResponse<DateScheduleResponse> addSchedule(@PathVariable Long id, @RequestBody AddDateScheduleRequest request){
+        Long userId = JwtTokenProvider.getCurrentUserId();
+        return ApiResponse.<DateScheduleResponse>builder()
+                .code(200)
+                .message("Add schedule successfully")
+                .data(discoveryService.addDateSchedule(id, userId, request))
+                .build();
+    }
+
+    @PutMapping("/match/{id}/schedule/{scheduleId}")
+    public ApiResponse<DateScheduleResponse> updateSchedule(@PathVariable Long id, @RequestBody UpdateDateScheduleRequest request, @PathVariable Long scheduleId){
+        Long userId = JwtTokenProvider.getCurrentUserId();
+        return ApiResponse.<DateScheduleResponse>builder()
+                .code(200)
+                .message("Update schedule successfully")
+                .data(discoveryService.updateDateSchedule(id, userId, scheduleId, request))
                 .build();
     }
 }
