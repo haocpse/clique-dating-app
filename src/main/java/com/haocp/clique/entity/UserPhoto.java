@@ -21,10 +21,6 @@ public class UserPhoto {
     @Column(name = "photo_url", nullable = false)
     private String photoUrl;
 
-    @Column(name = "is_primary", nullable = false)
-    @Builder.Default
-    private Boolean isPrimary = false;
-
     @Column(name = "display_order", nullable = false)
     @Builder.Default
     private Integer displayOrder = 0;

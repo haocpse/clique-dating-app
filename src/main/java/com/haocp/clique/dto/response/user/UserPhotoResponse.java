@@ -12,7 +12,6 @@ public class UserPhotoResponse {
 
     Long id;
     String photoUrl;
-    Boolean isPrimary;
     Integer displayOrder;
 
 }

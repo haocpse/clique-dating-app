@@ -3,8 +3,11 @@ package com.haocp.clique.controller;
 import com.haocp.clique.dto.ApiResponse;
 import com.haocp.clique.dto.request.user.CreateUserProfileRequest;
 import com.haocp.clique.dto.request.user.UpdateUserProfileRequest;
+import com.haocp.clique.dto.response.user.UserPhotoResponse;
 import com.haocp.clique.dto.response.user.UserResponse;
+import com.haocp.clique.service.UserPhotoService;
 import com.haocp.clique.service.UserService;
+import com.haocp.clique.ultis.JwtTokenProvider;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,6 +24,7 @@ import java.util.List;
 public class UserController {
 
     UserService userService;
+    UserPhotoService userPhotoService;
 
     @PostMapping("/{id}/profile")
     public ApiResponse<UserResponse> createUserProfile(@PathVariable Long id, @RequestBody CreateUserProfileRequest request){
@@ -41,14 +45,25 @@ public class UserController {
     }
 
     @PostMapping(
-            value = "/{id}/photo",
+            value = "/photo",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    public ApiResponse<UserResponse> modifyUserPhoto(@PathVariable Long id, @RequestParam("photo") List<MultipartFile> photos){
-        return ApiResponse.<UserResponse>builder()
+    public ApiResponse<UserPhotoResponse> modifyUserPhoto(@RequestParam("photo") MultipartFile photos){
+        Long id = JwtTokenProvider.getCurrentUserId();
+        return ApiResponse.<UserPhotoResponse>builder()
                 .code(200)
                 .message("Modify user photo successfully")
-                .data(userService.modifyUserPhoto(id, photos))
+                .data(userPhotoService.modifyUserPhoto(id, photos))
+                .build();
+    }
+
+    @DeleteMapping("/photo/{id}")
+    public ApiResponse<UserPhotoResponse> deleteUserPhoto(@PathVariable Long id) {
+        Long userId = JwtTokenProvider.getCurrentUserId();
+        userPhotoService.deleteUserPhoto(userId, id);
+        return ApiResponse.<UserPhotoResponse>builder()
+                .code(200)
+                .message("Modify user photo successfully")
                 .build();
     }
 
@@ -58,6 +73,16 @@ public class UserController {
                 .code(200)
                 .message("Get current user successfully")
                 .data(userService.getCurrentUser())
+                .build();
+    }
+
+    @GetMapping("/discovery")
+    public ApiResponse<String> getDiscoveryUser(@RequestParam int page){
+        Long userId = JwtTokenProvider.getCurrentUserId();
+        return ApiResponse.<String>builder()
+                .code(200)
+                .message("Get discovery user successfully")
+                .data(userService.getDiscoveryUser(page, userId))
                 .build();
     }
 

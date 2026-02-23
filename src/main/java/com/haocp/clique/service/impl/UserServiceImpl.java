@@ -1,5 +1,7 @@
 package com.haocp.clique.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haocp.clique.dto.request.user.CreateUserProfileRequest;
 import com.haocp.clique.dto.request.user.UpdateUserProfileRequest;
 import com.haocp.clique.dto.response.user.UserResponse;
@@ -13,16 +15,19 @@ import com.haocp.clique.mapper.UserProfileMapper;
 import com.haocp.clique.repository.UserProfileRepository;
 import com.haocp.clique.repository.UserRepository;
 import com.haocp.clique.service.UserService;
+import com.haocp.clique.specification.UserSpecification;
 import com.haocp.clique.ultis.FileSaver;
 import com.haocp.clique.ultis.JwtTokenProvider;
+import com.haocp.clique.ultis.ParsingHelper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 @Service
@@ -75,36 +80,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse getCurrentUser() {
-        User user = userRepository.findById(JwtTokenProvider.getCurrentUserId())
+        Long userId = JwtTokenProvider.getCurrentUserId();
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (user.getSwipeOrder() == null || user.getSwipeOrder().isBlank()) {
+            user.setSwipeOrder(getDiscoveryUser(0, userId));
+            userRepository.save(user);
+        }
         return userMapper.toUserResponse(user);
     }
 
     @Override
-    public UserResponse modifyUserPhoto(Long userId, List<MultipartFile> photos) {
+    public String getDiscoveryUser(int page, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        UserProfile profile = user.getProfile();
-        if (profile == null) {
-            throw new AppException(ErrorCode.USER_PROFILE_NOT_FOUND);
-        }
-        if (photos == null || photos.isEmpty()) {
-            throw new AppException(ErrorCode.FILE_EMPTY);
-        }
-        int order = 1;
-        for (MultipartFile photo : photos) {
-            String photoUrl = FileSaver.save(photo, "users/" + userId);
-            UserPhoto userPhoto = UserPhoto.builder()
-                    .photoUrl(photoUrl)
-                    .displayOrder(order)
-                    .isPrimary(user.getPhotos().isEmpty())
-                    .user(user)
-                    .build();
-
-            user.getPhotos().add(userPhoto);
-            order++;
-        }
-
-        return userMapper.toUserResponse(user);
+        List<Long> existingIds =
+                ParsingHelper.parseJsonToLongList(user.getSwipeOrder());
+        Specification<User> spec =
+                UserSpecification.userSpecification(
+                        userId,
+                        existingIds
+                );
+        Pageable pageable = PageRequest.of(page, 50);
+        List<Long> candidateIds =
+                userRepository.findAll(spec, pageable)
+                        .stream()
+                        .map(User::getId)
+                        .toList();
+        String swipeOrder = ParsingHelper.toJson(candidateIds);
+        user.setSwipeOrder(swipeOrder);
+        userRepository.save(user);
+        return swipeOrder;
     }
+
+
 }

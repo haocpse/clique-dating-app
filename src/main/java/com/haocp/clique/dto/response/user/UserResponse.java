@@ -2,8 +2,6 @@ package com.haocp.clique.dto.response.user;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -14,20 +12,10 @@ import java.util.List;
 public class UserResponse {
 
     Long id;
-
     String email;
     String phoneNumber;
-
-    Boolean enabled;
-    Boolean emailVerified;
-    String authProvider;
-    String role;
-
-    LocalDateTime lastLogin;
-    LocalDateTime createdAt;
-
+    String swipeOrder;
     UserProfileResponse profile;
-
     List<UserPhotoResponse> photos;
-
+    List<UserAvailabilityResponse> availabilities;
 }
