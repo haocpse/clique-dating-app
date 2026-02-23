@@ -31,7 +31,7 @@ public class DateSchedule {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     @Builder.Default
-    private DateScheduleStatus status = DateScheduleStatus.PENDING;
+    private DateScheduleStatus status = DateScheduleStatus.AUTO;
 
     @Column(name = "cancelled_by_id")
     private Long cancelledById;
@@ -46,11 +46,11 @@ public class DateSchedule {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "requester_id", nullable = false)
+    @JoinColumn(name = "requester_id")
     private User requester;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receiver_id", nullable = false)
+    @JoinColumn(name = "receiver_id")
     private User receiver;
 
     @ManyToOne(fetch = FetchType.LAZY)

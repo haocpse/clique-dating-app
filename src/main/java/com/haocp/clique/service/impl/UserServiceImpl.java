@@ -83,10 +83,6 @@ public class UserServiceImpl implements UserService {
         Long userId = JwtTokenProvider.getCurrentUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        if (user.getSwipeOrder() == null || user.getSwipeOrder().isBlank()) {
-            user.setSwipeOrder(getSwipeOrder(0, userId));
-            userRepository.save(user);
-        }
         return userMapper.toUserResponse(user);
     }
 

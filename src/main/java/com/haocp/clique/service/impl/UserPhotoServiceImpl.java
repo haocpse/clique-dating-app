@@ -45,11 +45,10 @@ public class UserPhotoServiceImpl implements UserPhotoService {
         String photoUrl = FileSaver.save(photo, "users/" + userId);
         UserPhoto userPhoto = UserPhoto.builder()
                 .photoUrl(photoUrl)
-                .displayOrder(user.getPhotos() != null ? user.getPhotos().size() + 1 : 0)
+                .displayOrder(user.getPhotos() != null ? user.getPhotos().size() : 0)
                 .user(user)
                 .build();
-        user.getPhotos().add(userPhoto);
-        userRepository.save(user);
+        userPhotoRepository.save(userPhoto);
         return userPhotoMapper.toUserPhotoResponse(userPhoto);
     }
 

@@ -24,4 +24,10 @@ public interface UserMapper {
     @Named("DiscoveryUser")
     UserResponse toDiscoveryResponse(User user);
 
+    @Mapping(target = "availabilities", ignore = true)
+    @Mapping(target = "email", ignore = true)
+    @Mapping(target = "swipeOrder", ignore = true)
+    @Named("MatchUser")
+    UserResponse toMatchResponse(User user);
+
 }
