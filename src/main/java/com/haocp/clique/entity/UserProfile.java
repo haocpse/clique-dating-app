@@ -45,12 +45,6 @@ public class UserProfile {
     @Column(length = 100)
     private String country;
 
-    @Column
-    private Double latitude;
-
-    @Column
-    private Double longitude;
-
     @Column(length = 30)
     private String occupation;
 

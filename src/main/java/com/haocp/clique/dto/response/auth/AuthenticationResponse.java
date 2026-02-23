@@ -1,4 +1,4 @@
-package com.haocp.clique.dto.response;
+package com.haocp.clique.dto.response.auth;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

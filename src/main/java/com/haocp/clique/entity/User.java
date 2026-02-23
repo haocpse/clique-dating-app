@@ -35,7 +35,7 @@ public class User {
 
     @Column(name = "email_verified", nullable = false)
     @Builder.Default
-    private Boolean emailVerified = false;
+    private Boolean emailVerified = true;
 
     @Column(name = "auth_provider", length = 20)
     @Builder.Default

@@ -1,8 +1,8 @@
 package com.haocp.clique.service.impl;
 
-import com.haocp.clique.dto.request.LoginRequest;
-import com.haocp.clique.dto.request.RegisterRequest;
-import com.haocp.clique.dto.response.AuthenticationResponse;
+import com.haocp.clique.dto.request.auth.LoginRequest;
+import com.haocp.clique.dto.request.auth.RegisterRequest;
+import com.haocp.clique.dto.response.auth.AuthenticationResponse;
 import com.haocp.clique.entity.User;
 import com.haocp.clique.exception.AppException;
 import com.haocp.clique.exception.ErrorCode;
@@ -46,24 +46,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow(() -> AppException.builder()
                         .errorCode(ErrorCode.INVALID_CREDENTIALS)
                         .build());
-
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw AppException.builder()
                     .errorCode(ErrorCode.INVALID_CREDENTIALS)
                     .build();
         }
-
         if (!user.getEnabled()) {
             throw AppException.builder()
                     .errorCode(ErrorCode.USER_DISABLED)
                     .build();
         }
-
         user.setLastLogin(LocalDateTime.now());
         userRepository.save(user);
-
         String token = generateToken(user);
-
         return AuthenticationResponse.builder()
                 .token(token)
                 .build();
@@ -76,23 +71,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .errorCode(ErrorCode.PASSWORD_MISMATCH)
                     .build();
         }
-
         if (userRepository.existsByEmail(request.getEmail())) {
             throw AppException.builder()
                     .errorCode(ErrorCode.EMAIL_ALREADY_EXISTS)
                     .build();
         }
-
         User user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role("USER")
                 .build();
-
         userRepository.save(user);
-
         String token = generateToken(user);
-
         return AuthenticationResponse.builder()
                 .token(token)
                 .build();

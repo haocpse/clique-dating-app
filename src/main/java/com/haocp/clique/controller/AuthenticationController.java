@@ -1,9 +1,9 @@
 package com.haocp.clique.controller;
 
 import com.haocp.clique.dto.ApiResponse;
-import com.haocp.clique.dto.request.LoginRequest;
-import com.haocp.clique.dto.request.RegisterRequest;
-import com.haocp.clique.dto.response.AuthenticationResponse;
+import com.haocp.clique.dto.request.auth.LoginRequest;
+import com.haocp.clique.dto.request.auth.RegisterRequest;
+import com.haocp.clique.dto.response.auth.AuthenticationResponse;
 import com.haocp.clique.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

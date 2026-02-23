@@ -36,8 +36,6 @@ CREATE TABLE user_profiles (
     bio                 TEXT            NULL,
     city                VARCHAR(100)    NULL,
     country             VARCHAR(100)    NULL,
-    latitude            DOUBLE          NULL,
-    longitude           DOUBLE          NULL,
     occupation          VARCHAR(30)     NULL,
     company             VARCHAR(100)    NULL,
     school              VARCHAR(100)    NULL,
