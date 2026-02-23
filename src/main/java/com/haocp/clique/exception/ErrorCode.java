@@ -12,6 +12,7 @@ public enum ErrorCode {
     //400
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "Bad request"),
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "Password and confirm password do not match"),
+    FILE_EMPTY(HttpStatus.BAD_REQUEST, "File is empty"),
     //401
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Unauthenticated"),
     INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Invalid email or password"),
