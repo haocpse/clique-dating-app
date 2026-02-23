@@ -84,14 +84,14 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         if (user.getSwipeOrder() == null || user.getSwipeOrder().isBlank()) {
-            user.setSwipeOrder(getDiscoveryUser(0, userId));
+            user.setSwipeOrder(getSwipeOrder(0, userId));
             userRepository.save(user);
         }
         return userMapper.toUserResponse(user);
     }
 
     @Override
-    public String getDiscoveryUser(int page, Long userId) {
+    public String getSwipeOrder(int page, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         List<Long> existingIds =
@@ -111,6 +111,13 @@ public class UserServiceImpl implements UserService {
         user.setSwipeOrder(swipeOrder);
         userRepository.save(user);
         return swipeOrder;
+    }
+
+    @Override
+    public UserResponse getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        return userMapper.toDiscoveryResponse(user);
     }
 
 

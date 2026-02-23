@@ -76,13 +76,22 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("/discovery")
-    public ApiResponse<String> getDiscoveryUser(@RequestParam int page){
+    @GetMapping("/swipe-order")
+    public ApiResponse<String> getSwipeOrder(@RequestParam int page){
         Long userId = JwtTokenProvider.getCurrentUserId();
         return ApiResponse.<String>builder()
                 .code(200)
                 .message("Get discovery user successfully")
-                .data(userService.getDiscoveryUser(page, userId))
+                .data(userService.getSwipeOrder(page, userId))
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<UserResponse> getUserById(@PathVariable Long id){
+        return ApiResponse.<UserResponse>builder()
+                .code(200)
+                .message("Get user by id successfully")
+                .data(userService.getUserById(id))
                 .build();
     }
 

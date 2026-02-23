@@ -9,6 +9,8 @@ public interface UserService {
     UserResponse createUserProfile(Long userId, CreateUserProfileRequest request);
     UserResponse updateUserProfile(Long userId, UpdateUserProfileRequest request);
     UserResponse getCurrentUser();
-    String getDiscoveryUser(int page, Long userId);
+    String getSwipeOrder(int page, Long userId);
+    UserResponse getUserById(Long userId);
+
 
 }
