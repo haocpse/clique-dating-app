@@ -22,16 +22,16 @@ public class UserAvailability {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "day_of_week", nullable = false, length = 15)
+    @Column(name = "day_of_week", length = 15)
     private DayOfWeek dayOfWeek;
 
     @Column(name = "specific_date")
     private LocalDate specificDate;
 
-    @Column(name = "start_time", nullable = false)
+    @Column(name = "start_time")
     private LocalTime startTime;
 
-    @Column(name = "end_time", nullable = false)
+    @Column(name = "end_time")
     private LocalTime endTime;
 
     @Column(name = "is_recurring", nullable = false)

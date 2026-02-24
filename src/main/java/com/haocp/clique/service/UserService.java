@@ -2,6 +2,7 @@ package com.haocp.clique.service;
 
 import com.haocp.clique.dto.request.user.AddUserAvailabilityRequest;
 import com.haocp.clique.dto.request.user.CreateUserProfileRequest;
+import com.haocp.clique.dto.request.user.UpdateSwipeOrderRequest;
 import com.haocp.clique.dto.request.user.UpdateUserProfileRequest;
 import com.haocp.clique.dto.response.user.UserAvailabilityResponse;
 import com.haocp.clique.dto.response.user.UserResponse;
@@ -14,5 +15,6 @@ public interface UserService {
     String getSwipeOrder(int page, Long userId);
     UserResponse getUserById(Long userId);
     UserAvailabilityResponse addAvailability(Long userId, AddUserAvailabilityRequest request);
+    String updateSwipeOrder(UpdateSwipeOrderRequest request);
 
 }

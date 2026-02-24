@@ -15,6 +15,7 @@ public class UserResponse {
     String email;
     String phoneNumber;
     String swipeOrder;
+    int refreshSwipeTime;
     UserProfileResponse profile;
     List<UserPhotoResponse> photos;
     List<UserAvailabilityResponse> availabilities;

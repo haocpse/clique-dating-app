@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haocp.clique.dto.request.user.AddUserAvailabilityRequest;
 import com.haocp.clique.dto.request.user.CreateUserProfileRequest;
+import com.haocp.clique.dto.request.user.UpdateSwipeOrderRequest;
 import com.haocp.clique.dto.request.user.UpdateUserProfileRequest;
 import com.haocp.clique.dto.response.user.UserAvailabilityResponse;
 import com.haocp.clique.dto.response.user.UserResponse;
@@ -111,8 +112,11 @@ public class UserServiceImpl implements UserService {
                         .map(User::getId)
                         .toList();
         String swipeOrder = ParsingHelper.toJson(candidateIds);
-        user.setSwipeOrder(swipeOrder);
-        userRepository.save(user);
+        if (!candidateIds.isEmpty()) {
+            user.setRefreshSwipeTime(page);
+            user.setSwipeOrder(swipeOrder);
+            userRepository.save(user);
+        }
         return swipeOrder;
     }
 
@@ -131,6 +135,15 @@ public class UserServiceImpl implements UserService {
         availability.setUser(user);
         userAvailabilityRepository.save(availability);
         return userAvailabilityMapper.toUserAvailabilityResponse(availability);
+    }
+
+    @Override
+    public String updateSwipeOrder(UpdateSwipeOrderRequest request) {
+        User user = userRepository.findById(JwtTokenProvider.getCurrentUserId())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        user.setSwipeOrder(ParsingHelper.toJson(request.getSwipeOrder()));
+        userRepository.save(user);
+        return ParsingHelper.toJson(request.getSwipeOrder());
     }
 
 

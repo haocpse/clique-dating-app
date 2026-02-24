@@ -3,6 +3,7 @@ package com.haocp.clique.controller;
 import com.haocp.clique.dto.ApiResponse;
 import com.haocp.clique.dto.request.user.AddUserAvailabilityRequest;
 import com.haocp.clique.dto.request.user.CreateUserProfileRequest;
+import com.haocp.clique.dto.request.user.UpdateSwipeOrderRequest;
 import com.haocp.clique.dto.request.user.UpdateUserProfileRequest;
 import com.haocp.clique.dto.response.user.UserAvailabilityResponse;
 import com.haocp.clique.dto.response.user.UserPhotoResponse;
@@ -85,6 +86,15 @@ public class UserController {
                 .code(200)
                 .message("Get discovery user successfully")
                 .data(userService.getSwipeOrder(page, userId))
+                .build();
+    }
+
+    @PutMapping("/swipe-order")
+    public ApiResponse<String> updateSwipeOrder(@RequestBody UpdateSwipeOrderRequest request){
+        return ApiResponse.<String>builder()
+                .code(200)
+                .message("Get discovery user successfully")
+                .data(userService.updateSwipeOrder(request))
                 .build();
     }
 

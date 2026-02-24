@@ -51,6 +51,10 @@ public class User {
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
+    @Column(name = "refresh_swipe_time")
+    @Builder.Default
+    private int refreshSwipeTime = 0;
+
     @Column(columnDefinition = "json")
     private String swipeOrder;
 

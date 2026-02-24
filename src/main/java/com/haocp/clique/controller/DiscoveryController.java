@@ -2,11 +2,14 @@ package com.haocp.clique.controller;
 
 import com.haocp.clique.dto.ApiResponse;
 import com.haocp.clique.dto.request.match.AddDateScheduleRequest;
+import com.haocp.clique.dto.request.match.CancelScheduleRequest;
 import com.haocp.clique.dto.request.match.UpdateDateScheduleRequest;
 import com.haocp.clique.dto.response.match.DateScheduleResponse;
 import com.haocp.clique.dto.response.match.MatchResponse;
 import com.haocp.clique.dto.response.user.UserResponse;
+import com.haocp.clique.entity.enums.DateScheduleStatus;
 import com.haocp.clique.entity.enums.LikeType;
+import com.haocp.clique.entity.enums.MatchStatus;
 import com.haocp.clique.service.DiscoveryService;
 import com.haocp.clique.service.UserService;
 import com.haocp.clique.ultis.JwtTokenProvider;
@@ -62,6 +65,26 @@ public class DiscoveryController {
                 .code(200)
                 .message("Update schedule successfully")
                 .data(discoveryService.updateDateSchedule(id, userId, scheduleId, request))
+                .build();
+    }
+
+    @PutMapping("/match/{id}/schedule/{scheduleId}/action")
+    public ApiResponse<DateScheduleResponse> actionSchedule(@PathVariable Long id, @RequestParam DateScheduleStatus status, @PathVariable Long scheduleId, @RequestBody CancelScheduleRequest request){
+        Long userId = JwtTokenProvider.getCurrentUserId();
+        return ApiResponse.<DateScheduleResponse>builder()
+                .code(200)
+                .message("Take action schedule successfully")
+                .data(discoveryService.takeActionDateSchedule(id, userId, scheduleId, status, request))
+                .build();
+    }
+
+    @DeleteMapping("/match/{id}")
+    public ApiResponse<Void> unMatch(@PathVariable Long id){
+        Long userId = JwtTokenProvider.getCurrentUserId();
+        discoveryService.unMatch(userId, id);
+        return ApiResponse.<Void>builder()
+                .code(200)
+                .message("Take action schedule successfully")
                 .build();
     }
 }

@@ -42,4 +42,18 @@ public class ParsingHelper {
             return "";
         }
     }
+
+    public static String toJson(String ids){
+        try {
+            return mapper.writeValueAsString(
+                    ids
+            );
+
+        } catch (Exception e) {
+            System.err.println(
+                    "Parse failed: " + e.getMessage()
+            );
+            return "";
+        }
+    }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MatchResponse {
 
+    Long id;
     UserResponse user;
     List<DateScheduleResponse> schedules;
 
