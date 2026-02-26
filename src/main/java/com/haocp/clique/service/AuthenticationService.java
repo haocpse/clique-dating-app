@@ -7,5 +7,5 @@ import com.haocp.clique.dto.response.auth.AuthenticationResponse;
 public interface AuthenticationService {
 
     AuthenticationResponse login(LoginRequest request);
-    AuthenticationResponse register(RegisterRequest request);
+    AuthenticationResponse register(RegisterRequest request, String role);
 }

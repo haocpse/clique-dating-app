@@ -65,7 +65,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest request, String role) {
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw AppException.builder()
                     .errorCode(ErrorCode.PASSWORD_MISMATCH)
@@ -79,7 +79,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role("USER")
+                .role(role)
                 .build();
         userRepository.save(user);
         String token = generateToken(user);

@@ -34,7 +34,16 @@ public class AuthenticationController {
         return ApiResponse.<AuthenticationResponse>builder()
                 .code(201)
                 .message("Registration successful")
-                .data(authenticationService.register(request))
+                .data(authenticationService.register(request, "USER"))
+                .build();
+    }
+
+    @PostMapping("/partner")
+    public ApiResponse<AuthenticationResponse> becomePartner(@RequestBody @Valid RegisterRequest request) {
+        return ApiResponse.<AuthenticationResponse>builder()
+                .code(201)
+                .message("Registration successful")
+                .data(authenticationService.register(request, "PARTNER"))
                 .build();
     }
 }
