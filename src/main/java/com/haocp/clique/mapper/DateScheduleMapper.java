@@ -5,9 +5,10 @@ import com.haocp.clique.dto.request.match.UpdateDateScheduleRequest;
 import com.haocp.clique.dto.response.match.DateScheduleResponse;
 import com.haocp.clique.entity.DateSchedule;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {PartnerMapper.class})
 public interface DateScheduleMapper {
 
     DateSchedule toDateSchedule(AddDateScheduleRequest request);

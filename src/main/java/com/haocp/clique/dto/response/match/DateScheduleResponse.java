@@ -1,5 +1,6 @@
 package com.haocp.clique.dto.response.match;
 
+import com.haocp.clique.dto.response.partner.PartnerResponse;
 import com.haocp.clique.entity.enums.DateScheduleStatus;
 import com.haocp.clique.entity.enums.DayOfWeek;
 import jakarta.persistence.*;
@@ -25,5 +26,6 @@ public class DateScheduleResponse {
     Long cancelledById;
     String cancelReason;
     Boolean isRequester;
+    PartnerResponse partner;
 
 }

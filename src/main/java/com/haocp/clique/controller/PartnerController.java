@@ -2,6 +2,7 @@ package com.haocp.clique.controller;
 
 import com.haocp.clique.dto.ApiResponse;
 import com.haocp.clique.dto.request.partner.CreatePartnerRequest;
+import com.haocp.clique.dto.response.match.DateScheduleResponse;
 import com.haocp.clique.dto.response.partner.OverviewResponse;
 import com.haocp.clique.dto.response.partner.PartnerImageResponse;
 import com.haocp.clique.dto.response.partner.PartnerResponse;
@@ -98,6 +99,15 @@ public class PartnerController {
                 .code(200)
                 .message("Take action partner successfully")
                 .data(partnerService.takeAction(id, action))
+                .build();
+    }
+
+    @GetMapping("/schedule")
+    public ApiResponse<List<DateScheduleResponse>> getSchedule() {
+        return ApiResponse.<List<DateScheduleResponse>>builder()
+                .code(200)
+                .message("Get schedule successfully")
+                .data(partnerService.getSchedule(JwtTokenProvider.getCurrentUserId()))
                 .build();
     }
 

@@ -10,5 +10,6 @@ import java.util.List;
 public interface DateScheduleRepository extends JpaRepository<DateSchedule, Long> {
 
     List<DateSchedule> findByMatch_Id(Long matchId);
+    List<DateSchedule> findByPartner_Id(Long partnerId);
 
 }

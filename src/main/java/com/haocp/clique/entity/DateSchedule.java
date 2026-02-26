@@ -57,6 +57,10 @@ public class DateSchedule {
     @JoinColumn(name = "match_id", nullable = false)
     private Match match;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "partner_id")
+    private Partner partner;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

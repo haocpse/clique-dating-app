@@ -14,10 +14,7 @@ import com.haocp.clique.exception.AppException;
 import com.haocp.clique.exception.ErrorCode;
 import com.haocp.clique.mapper.DateScheduleMapper;
 import com.haocp.clique.mapper.UserMapper;
-import com.haocp.clique.repository.DateScheduleRepository;
-import com.haocp.clique.repository.LikeRepository;
-import com.haocp.clique.repository.MatchRepository;
-import com.haocp.clique.repository.UserRepository;
+import com.haocp.clique.repository.*;
 import com.haocp.clique.service.DiscoveryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +39,7 @@ public class DiscoveryServiceImpl implements DiscoveryService {
     DateScheduleRepository dateScheduleRepository;
     DateScheduleMapper dateScheduleMapper;
     UserMapper userMapper;
+    PartnerRepository partnerRepository;
 
     @Override
     public Boolean action(Long likerId, Long likedId, LikeType likeType) {
@@ -107,6 +105,12 @@ public class DiscoveryServiceImpl implements DiscoveryService {
         User requester = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         DateSchedule dateSchedule = dateScheduleMapper.toDateSchedule(request);
+        if (request.getPartnerId() != null){
+            Partner partner =partnerRepository.findById(request.getPartnerId())
+                    .orElseThrow(() -> new AppException(ErrorCode.PARTNER_NOT_FOUND));
+            dateSchedule.setPartner(partner);
+            dateSchedule.setLocation(partner.getAddress());
+        }
         dateSchedule.setMatch(match);
         return getDateScheduleResponse(dateSchedule, requester);
     }
@@ -121,6 +125,13 @@ public class DiscoveryServiceImpl implements DiscoveryService {
         User requester = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         schedule = dateScheduleMapper.updateToDateSchedule(request, schedule);
+        if (request.getPartnerId() != null) {
+            Partner partner =partnerRepository.findById(request.getPartnerId())
+                    .orElseThrow(() -> new AppException(ErrorCode.PARTNER_NOT_FOUND));
+            schedule.setPartner(partner);
+            schedule.setLocation(partner.getAddress());
+        }
+
         return getDateScheduleResponse(schedule, requester);
     }
 

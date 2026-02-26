@@ -43,4 +43,8 @@ public class Partner {
     @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Builder.Default
     private List<PartnerImage> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @Builder.Default
+    private List<DateSchedule> dateSchedules = new ArrayList<>();
 }

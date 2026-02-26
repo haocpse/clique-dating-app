@@ -16,5 +16,5 @@ public class UpdateDateScheduleRequest {
     LocalDateTime scheduledAt;
     String location;
     String message;
-
+    Long partnerId;
 }

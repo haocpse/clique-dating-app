@@ -16,4 +16,5 @@ public class AddDateScheduleRequest {
     LocalDateTime scheduledAt;
     String location;
     String message;
+    Long partnerId;
 }

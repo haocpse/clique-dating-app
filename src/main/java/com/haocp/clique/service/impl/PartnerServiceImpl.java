@@ -1,17 +1,21 @@
 package com.haocp.clique.service.impl;
 
 import com.haocp.clique.dto.request.partner.CreatePartnerRequest;
+import com.haocp.clique.dto.response.match.DateScheduleResponse;
 import com.haocp.clique.dto.response.partner.OverviewResponse;
 import com.haocp.clique.dto.response.partner.PartnerImageResponse;
 import com.haocp.clique.dto.response.partner.PartnerResponse;
+import com.haocp.clique.entity.DateSchedule;
 import com.haocp.clique.entity.Partner;
 import com.haocp.clique.entity.PartnerImage;
 import com.haocp.clique.entity.User;
 import com.haocp.clique.entity.enums.PartnerStatus;
 import com.haocp.clique.exception.AppException;
 import com.haocp.clique.exception.ErrorCode;
+import com.haocp.clique.mapper.DateScheduleMapper;
 import com.haocp.clique.mapper.PartnerImageMapper;
 import com.haocp.clique.mapper.PartnerMapper;
+import com.haocp.clique.repository.DateScheduleRepository;
 import com.haocp.clique.repository.PartnerImageRepository;
 import com.haocp.clique.repository.PartnerRepository;
 import com.haocp.clique.repository.UserRepository;
@@ -40,6 +44,8 @@ public class PartnerServiceImpl implements PartnerService {
     PartnerMapper partnerMapper;
     UserRepository userRepository;
     PartnerImageMapper partnerImageMapper;
+    DateScheduleRepository dateScheduleRepository;
+    DateScheduleMapper dateScheduleMapper;
 
     @Override
     public PartnerResponse createPartner(CreatePartnerRequest request) {
@@ -146,5 +152,13 @@ public class PartnerServiceImpl implements PartnerService {
         }
         partnerRepository.save(partner);
         return partnerMapper.toPartnerResponse(partner);
+    }
+
+    @Override
+    public List<DateScheduleResponse> getSchedule(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        List<DateSchedule> schedules = dateScheduleRepository.findByPartner_Id(user.getPartner().getId());
+        return schedules.stream().map(dateScheduleMapper::toDateScheduleResponse).toList();
     }
 }
