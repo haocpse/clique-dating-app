@@ -1,6 +1,7 @@
 package com.haocp.clique.mapper;
 
 import com.haocp.clique.dto.request.user.CreateUserProfileRequest;
+import com.haocp.clique.dto.response.partner.UserPartnerResponse;
 import com.haocp.clique.dto.response.user.UserResponse;
 import com.haocp.clique.entity.User;
 import com.haocp.clique.entity.UserProfile;
@@ -29,5 +30,7 @@ public interface UserMapper {
     @Mapping(target = "swipeOrder", ignore = true)
     @Named("MatchUser")
     UserResponse toMatchResponse(User user);
+
+    UserPartnerResponse toUserPartnerResponse(User user);
 
 }

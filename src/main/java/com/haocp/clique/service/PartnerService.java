@@ -5,10 +5,15 @@ import com.haocp.clique.dto.response.partner.PartnerImageResponse;
 import com.haocp.clique.dto.response.partner.PartnerResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface PartnerService {
 
     PartnerResponse createPartner(CreatePartnerRequest request);
     PartnerImageResponse uploadPartnerImage(MultipartFile image);
     void deletePartnerImage(Long id);
+    List<PartnerResponse> getAllPartners();
+    PartnerResponse getPartnerById(Long id);
+    PartnerResponse getMe(Long userId);
 
 }

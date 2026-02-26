@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping("/api/partner")
@@ -45,12 +47,38 @@ public class PartnerController {
     }
 
     @DeleteMapping("/images/{id}")
-    public ApiResponse<UserPhotoResponse> deletePartnerImage(@PathVariable Long id) {
+    public ApiResponse<PartnerImageResponse> deletePartnerImage(@PathVariable Long id) {
         partnerService.deletePartnerImage(id);
-        return ApiResponse.<UserPhotoResponse>builder()
+        return ApiResponse.<PartnerImageResponse>builder()
                 .code(200)
                 .message("Delete partner image successfully")
                 .build();
     }
 
+    @GetMapping
+    ApiResponse<List<PartnerResponse>> getAllPartners() {
+        return ApiResponse.<List<PartnerResponse>>builder()
+                .code(200)
+                .message("Get all partners successfully")
+                .data(partnerService.getAllPartners())
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    ApiResponse<PartnerResponse> getPartnerById(@PathVariable Long id) {
+        return ApiResponse.<PartnerResponse>builder()
+                .code(200)
+                .message("Get partner successfully")
+                .data(partnerService.getPartnerById(id))
+                .build();
+    }
+
+    @GetMapping("/me")
+    ApiResponse<PartnerResponse> getMe() {
+        return ApiResponse.<PartnerResponse>builder()
+                .code(200)
+                .message("Get partner successfully")
+                .data(partnerService.getMe(JwtTokenProvider.getCurrentUserId()))
+                .build();
+    }
 }

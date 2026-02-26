@@ -6,6 +6,7 @@ import com.haocp.clique.dto.response.partner.PartnerResponse;
 import com.haocp.clique.entity.Partner;
 import com.haocp.clique.entity.PartnerImage;
 import com.haocp.clique.entity.User;
+import com.haocp.clique.entity.enums.PartnerStatus;
 import com.haocp.clique.exception.AppException;
 import com.haocp.clique.exception.ErrorCode;
 import com.haocp.clique.mapper.PartnerImageMapper;
@@ -22,6 +23,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -76,5 +80,30 @@ public class PartnerServiceImpl implements PartnerService {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
         partnerImageRepository.delete(image);
+    }
+
+    @Override
+    public List<PartnerResponse> getAllPartners() {
+        User user = userRepository.findById(JwtTokenProvider.getCurrentUserId())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        List<Partner> partners;
+        if (user.getRole().equals("ADMIN"))
+            partners = partnerRepository.findAll();
+        else
+            partners = partnerRepository.findByStatus(PartnerStatus.APPROVED);
+        return partners.stream().map(partnerMapper::toPartnerResponse).toList();
+    }
+
+    @Override
+    public PartnerResponse getPartnerById(Long id) {
+        return partnerMapper.toPartnerResponse(partnerRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PARTNER_NOT_FOUND)));
+    }
+
+    @Override
+    public PartnerResponse getMe(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        return partnerMapper.toPartnerResponse(user.getPartner());
     }
 }

@@ -17,6 +17,7 @@ public class UserResponse {
     String swipeOrder;
     int refreshSwipeTime;
     UserProfileResponse profile;
+    String role;
     List<UserPhotoResponse> photos;
     List<UserAvailabilityResponse> availabilities;
 }

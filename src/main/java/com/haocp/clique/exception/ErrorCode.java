@@ -27,6 +27,7 @@ public enum ErrorCode {
     MATCH_NOT_FOUND(HttpStatus.NOT_FOUND, "Match not found"),
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "Schedule not found"),
     PARTNER_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "Partner image not found"),
+    PARTNER_NOT_FOUND(HttpStatus.NOT_FOUND, "Partner not found"),
     //500
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error"),
     //Others

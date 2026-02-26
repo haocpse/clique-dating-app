@@ -18,7 +18,7 @@ import java.util.List;
 public class PartnerResponse {
 
     Long id;
-    User user;
+    UserPartnerResponse user;
     String organizationName;
     String description;
     PartnerStatus status = PartnerStatus.PENDING;
