@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService {
         if (user.getProfile() != null) {
             throw new AppException(ErrorCode.USER_PROFILE_ALREADY_EXISTS);
         }
+
         UserProfile profile = userProfileMapper.createToUserProfile(request);
         profile.setUser(user);
         user.setProfile(profile);
@@ -105,7 +106,7 @@ public class UserServiceImpl implements UserService {
                         userId,
                         existingIds
                 );
-        Pageable pageable = PageRequest.of(page, 50);
+        Pageable pageable = PageRequest.of(page, 1);
         List<Long> candidateIds =
                 userRepository.findAll(spec, pageable)
                         .stream()

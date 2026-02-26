@@ -1,6 +1,7 @@
 package com.haocp.clique.service;
 
 import com.haocp.clique.dto.request.partner.CreatePartnerRequest;
+import com.haocp.clique.dto.request.partner.UpdatePartnerRequest;
 import com.haocp.clique.dto.response.match.DateScheduleResponse;
 import com.haocp.clique.dto.response.partner.OverviewResponse;
 import com.haocp.clique.dto.response.partner.PartnerImageResponse;
@@ -20,5 +21,5 @@ public interface PartnerService {
     OverviewResponse getOverview();
     PartnerResponse takeAction(Long id, String action);
     List<DateScheduleResponse> getSchedule(Long id);
-
+    PartnerResponse updatePartner(Long id, UpdatePartnerRequest request);
 }

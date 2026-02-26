@@ -35,9 +35,6 @@ public class UserPhotoServiceImpl implements UserPhotoService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         UserProfile profile = user.getProfile();
-        if (profile == null) {
-            throw new AppException(ErrorCode.USER_PROFILE_NOT_FOUND);
-        }
         if (photo == null) {
             throw new AppException(ErrorCode.FILE_EMPTY);
         }

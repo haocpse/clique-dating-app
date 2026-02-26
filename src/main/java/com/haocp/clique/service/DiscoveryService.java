@@ -18,4 +18,6 @@ public interface DiscoveryService {
     DateScheduleResponse updateDateSchedule(Long matchId, Long userId, Long scheduleId, UpdateDateScheduleRequest request);
     DateScheduleResponse takeActionDateSchedule(Long matchId, Long userId, Long scheduleId, DateScheduleStatus status, CancelScheduleRequest request);
     void unMatch(Long userId, Long matchId);
+    MatchResponse getMatchById(Long userId, Long matchId);
+
 }

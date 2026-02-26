@@ -48,6 +48,16 @@ public class DiscoveryController {
                 .build();
     }
 
+    @GetMapping("/match/{id}")
+    public ApiResponse<MatchResponse> getMatchById(@PathVariable Long id){
+        Long userId = JwtTokenProvider.getCurrentUserId();
+        return ApiResponse.<MatchResponse>builder()
+                .code(200)
+                .message("Get match by id successfully")
+                .data(discoveryService.getMatchById(userId, id))
+                .build();
+    }
+
     @PostMapping("/match/{id}/schedule")
     public ApiResponse<DateScheduleResponse> addSchedule(@PathVariable Long id, @RequestBody AddDateScheduleRequest request){
         Long userId = JwtTokenProvider.getCurrentUserId();

@@ -171,6 +171,29 @@ public class DiscoveryServiceImpl implements DiscoveryService {
         matchRepository.delete(match);
     }
 
+    @Override
+    public MatchResponse getMatchById(Long userId, Long matchId) {
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new AppException(ErrorCode.MATCH_NOT_FOUND));
+        User user = match.getUser1().getId().equals(userId) ? match.getUser2() : match.getUser1();
+        UserResponse userResponse = userMapper.toMatchResponse(user);
+        List<DateSchedule> schedules = dateScheduleRepository.findByMatch_Id(match.getId());
+        return MatchResponse.builder()
+                .schedules(schedules != null
+                        ? schedules
+                        .stream().map(dateSchedule -> {
+                            DateScheduleResponse response = dateScheduleMapper
+                                    .toDateScheduleResponse(dateSchedule);
+                            response.setIsRequester(dateSchedule.getRequester().getId().equals(userId));
+                            return response;
+                        })
+                        .toList()
+                        : null)
+                .user(userResponse)
+                .id(match.getId())
+                .build();
+    }
+
     DateScheduleResponse getDateScheduleResponse(DateSchedule schedule, User requester) {
         schedule.setStatus(DateScheduleStatus.PENDING);
         schedule.setRequester(requester);

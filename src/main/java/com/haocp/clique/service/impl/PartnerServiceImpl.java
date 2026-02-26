@@ -1,6 +1,7 @@
 package com.haocp.clique.service.impl;
 
 import com.haocp.clique.dto.request.partner.CreatePartnerRequest;
+import com.haocp.clique.dto.request.partner.UpdatePartnerRequest;
 import com.haocp.clique.dto.response.match.DateScheduleResponse;
 import com.haocp.clique.dto.response.partner.OverviewResponse;
 import com.haocp.clique.dto.response.partner.PartnerImageResponse;
@@ -160,5 +161,23 @@ public class PartnerServiceImpl implements PartnerService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         List<DateSchedule> schedules = dateScheduleRepository.findByPartner_Id(user.getPartner().getId());
         return schedules.stream().map(dateScheduleMapper::toDateScheduleResponse).toList();
+    }
+
+    @Override
+    public PartnerResponse updatePartner(Long id, UpdatePartnerRequest request) {
+        Partner partner = partnerRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PARTNER_NOT_FOUND));
+        partnerMapper.toPartner(request, partner);
+        for (Long imageId : request.getImageIds()) {
+            partnerImageRepository.findById(imageId)
+                    .ifPresent(partnerImage -> {
+                        if (partnerImage.getPartner() == null) {
+                            partnerImage.setPartner(partner);
+                            partner.getImages().add(partnerImage);
+                        }
+                    });
+        }
+        partnerRepository.save(partner);
+        return partnerMapper.toPartnerResponse(partner);
     }
 }
