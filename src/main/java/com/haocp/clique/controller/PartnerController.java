@@ -2,6 +2,7 @@ package com.haocp.clique.controller;
 
 import com.haocp.clique.dto.ApiResponse;
 import com.haocp.clique.dto.request.partner.CreatePartnerRequest;
+import com.haocp.clique.dto.response.partner.OverviewResponse;
 import com.haocp.clique.dto.response.partner.PartnerImageResponse;
 import com.haocp.clique.dto.response.partner.PartnerResponse;
 import com.haocp.clique.dto.response.user.UserPhotoResponse;
@@ -56,7 +57,7 @@ public class PartnerController {
     }
 
     @GetMapping
-    ApiResponse<List<PartnerResponse>> getAllPartners() {
+    public ApiResponse<List<PartnerResponse>> getAllPartners() {
         return ApiResponse.<List<PartnerResponse>>builder()
                 .code(200)
                 .message("Get all partners successfully")
@@ -65,7 +66,7 @@ public class PartnerController {
     }
 
     @GetMapping("/{id}")
-    ApiResponse<PartnerResponse> getPartnerById(@PathVariable Long id) {
+    public ApiResponse<PartnerResponse> getPartnerById(@PathVariable Long id) {
         return ApiResponse.<PartnerResponse>builder()
                 .code(200)
                 .message("Get partner successfully")
@@ -74,11 +75,30 @@ public class PartnerController {
     }
 
     @GetMapping("/me")
-    ApiResponse<PartnerResponse> getMe() {
+    public ApiResponse<PartnerResponse> getMe() {
         return ApiResponse.<PartnerResponse>builder()
                 .code(200)
                 .message("Get partner successfully")
                 .data(partnerService.getMe(JwtTokenProvider.getCurrentUserId()))
                 .build();
     }
+
+    @GetMapping("/over-view")
+    public ApiResponse<OverviewResponse> getOverview() {
+        return ApiResponse.<OverviewResponse>builder()
+                .code(200)
+                .message("Get overview successfully")
+                .data(partnerService.getOverview())
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    public ApiResponse<PartnerResponse> takeActionPartner(@PathVariable Long id, @RequestParam String action) {
+        return ApiResponse.<PartnerResponse>builder()
+                .code(200)
+                .message("Take action partner successfully")
+                .data(partnerService.takeAction(id, action))
+                .build();
+    }
+
 }

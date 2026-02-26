@@ -1,6 +1,7 @@
 package com.haocp.clique.service.impl;
 
 import com.haocp.clique.dto.request.partner.CreatePartnerRequest;
+import com.haocp.clique.dto.response.partner.OverviewResponse;
 import com.haocp.clique.dto.response.partner.PartnerImageResponse;
 import com.haocp.clique.dto.response.partner.PartnerResponse;
 import com.haocp.clique.entity.Partner;
@@ -14,6 +15,7 @@ import com.haocp.clique.mapper.PartnerMapper;
 import com.haocp.clique.repository.PartnerImageRepository;
 import com.haocp.clique.repository.PartnerRepository;
 import com.haocp.clique.repository.UserRepository;
+import com.haocp.clique.repository.projection.partner.PartnerStatusCount;
 import com.haocp.clique.service.PartnerService;
 import com.haocp.clique.ultis.FileSaver;
 import com.haocp.clique.ultis.JwtTokenProvider;
@@ -104,6 +106,45 @@ public class PartnerServiceImpl implements PartnerService {
     public PartnerResponse getMe(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (user.getPartner() == null)
+            throw new AppException(ErrorCode.PARTNER_NOT_FOUND);
         return partnerMapper.toPartnerResponse(user.getPartner());
+    }
+
+    @Override
+    public OverviewResponse getOverview() {
+        List<PartnerStatusCount> counts =
+                partnerRepository.countGroupByStatus();
+
+        int pending = 0;
+        int approved = 0;
+        int rejected = 0;
+
+        for (PartnerStatusCount c : counts) {
+            switch (c.getStatus()) {
+                case PENDING -> pending = c.getTotal();
+                case APPROVED -> approved = c.getTotal();
+                case REJECTED -> rejected = c.getTotal();
+            }
+        }
+
+        return OverviewResponse.builder()
+                .pending(pending)
+                .approved(approved)
+                .rejected(rejected)
+                .build();
+
+    }
+
+    @Override
+    public PartnerResponse takeAction(Long id, String action) {
+        Partner partner = partnerRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PARTNER_NOT_FOUND));
+        switch (action) {
+            case "approve" -> partner.setStatus(PartnerStatus.APPROVED);
+            case "reject" -> partner.setStatus(PartnerStatus.REJECTED);
+        }
+        partnerRepository.save(partner);
+        return partnerMapper.toPartnerResponse(partner);
     }
 }
